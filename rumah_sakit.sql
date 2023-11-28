@@ -2,6 +2,8 @@ create database rumah_sakit;
 show databases;
 use rumah_sakit;
 show tables;
+
+
 create table dokter (
 id_dokter varchar(6) not null,
 nama_dokter varchar(35) not null,
