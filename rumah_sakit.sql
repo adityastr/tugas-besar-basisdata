@@ -1,49 +1,101 @@
+-- Active: 1701242641759@@127.0.0.1@3306@rumah_sakit
+create database rumah_sakit;
 show databases;
-create database universitas;
-use universitas;
-
-
--- Table Mahasiswa
-create table Mahasiswa (NPM int(8) not null, Nama_Mahasiswa varchar (50) not null, Alamat varchar (50) not null);
+use rumah_sakit;
 show tables;
-insert into Mahasiswa (NPM,Nama_mahasiswa,Alamat) values 
-(10296832,'Nurhayati','Jakarta'),
-(10296126,'Astuti','Jakarta')
-,(31296500,'Budi','Depok'),
-(41296525,'Prananingrum','Bogor'),
-(50096487,'Pipit','Bekasi'),
-(21196353,'Quraish','Bogor');
-update Mahasiswa set alamat='Depok' where NPM=50096487;
-
-alter table Mahasiswa add primary key (NPM);
-describe Mahasiswa;
-select * from Mahasiswa;
 
 
-create table Matakuliah (KDMK varchar(5) not null, MTKULIAH varchar (25) not null, SKS varchar (10) not null);
-show tables;
-insert into Matakuliah (KDMK,MTKULIAH,SKS) values
-('KK021','P. Basis Data','2'),
-('KD132','SIM','3'),
-('KU122','Pancasila','2');
+-- TABLE DOKTER
+create table dokter (
+id_dokter varchar(6) not null,
+nama_dokter varchar(35) not null,
+no_telepon varchar(13) not null,
+alamat varchar(50) not null,
+spesialis varchar(50) not null,
+primary key (id_dokter));
+alter table dokter add column waktu_input timestamp default current_timestamp;
+alter table dokter add column jadwal varchar(5) not null after spesialis;
+desc dokter;
+insert into dokter (id_dokter, nama_dokter, no_telepon, alamat, spesialis, jadwal) values 
+('D0001', 'Dafiq', '081267767903', 'Jatisari', 'Anak', 'Malam'),
+('D0002', 'Wisam', '089045123703', 'Jatibening', 'Saraf', 'Pagi'),
+('D0003', 'Anggun', '081267207956', 'Jatisampurna', 'Kulit dan Kelamin', 'Malam'),
+('D0004', 'Dinda', '085667254567', 'Jatiluhur', 'Mata', 'Pagi'),
+('D0005', 'Daffa', '085897252050', 'Jatiluhur', 'Gigi', 'Malam'),
+('D0006', 'Ardhi', '082740659106', 'Jatisari', 'Bedah','Pagi');
+select * from dokter;
 
-select * from Matakuliah;
+
+-- TABLE PASIEN
+create table pasien (
+id_pasien varchar(6) not null,
+nama_pasien varchar(35) not null,
+jenis_kelamin varchar(2) not null,
+no_telepon varchar(13) not null,
+alamat varchar(50) not null,
+umur varchar(3) not null,
+waktu_input timestamp default current_timestamp,
+primary key (id_pasien));
+desc pasien;
+insert into pasien (id_pasien, nama_pasien, jenis_kelamin, no_telepon, alamat, umur) values
+('P00001', 'Aditya', 'L', '086284947812', 'Jatisari', 19),
+('P00002', 'Rizal', 'L', '086284047815', 'Cilangkap', 29),
+('P00003', 'Nasuha', 'P', '083984547202', 'Cipayung', 18),
+('P00004', 'Annisa', 'p', '088384717850', 'Jatibening', 20),
+('P00005', 'Riki', 'L', '089084617853', 'Ciangsana', 25),
+('P00006', 'Putra', 'L', '083984614072', 'Jatibening', 25);
+SELECT COUNT (alamat) as jumlah_alamat FROM pasien WHERE alamat='Jatibening';
+select * from pasien;
 
 
-create table Nilai (NPM varchar (30) not null, KDMK varchar (20) not null, MID varchar (15) not null, FINAL varchar (15) not null);
-describe Nilai;
-show tables;
-insert into Nilai (NPM,KDMK,MID,FINAL) values
-('10296832','KK021','60','75'),
-('10296126','KD132','70','90'),
-('31296500','KK021','55','40'),
-('41296525','KU122','90','80'),
-('21196353','KU122','75','75'),
-('50096487','KD132','80','0'),
-('10296832','KD132','40','30');
-alter table Nilai drop column NPM;
-alter table Nilai add constraint FK_NPM foreign key (NPM) references Mahasiswa (NPM);
 
-select * from Nilai;
+-- TABLE RUANG
+create table ruang (
+id_ruang varchar(6) not null,
+nama_ruang varchar(35) not null,
+jenis_ruang varchar(35) not null,
+primary key (id_ruang));
+desc ruang;
+insert into ruang (id_ruang, nama_ruang, jenis_ruang) values
+('R00001', 'Mawar', 'VIP'),
+('R00002', 'Melati', 'Kelas 3'),
+('R00003', 'Tulip', 'kelas 2'),
+('R00004', 'Anggrek', 'VIP'),
+('R00005', 'Matahari', 'Kelas 1'),
+('R00006', 'Cendana', 'Kelas 1');
+select * from ruang;
 
-delete from Nilai where KDMK='KK021' and NPM='';
+
+
+--TABLE OBAT
+create table obat (
+id_obat varchar(6) not null,
+nama_obat varchar(35) not null,
+jenis_obat varchar(50),
+primary key (id_obat));
+alter table obat add column stok_obat integer(4) unsigned not null default 0;
+alter table obat modify column stok_obat integer unsigned not null default 0;
+desc obat;
+insert into obat (id_obat, nama_obat, jenis_obat, stok_obat) values
+('O00001', 'Benzalkonium Chloride', 'spray rongga mulut, obat kumur', 20),
+('O00002', 'Zoledronic Acid', 'Obat suntik', 10),
+('O00003', 'Albumin', 'Dehidrasi', 25),
+('O00005', 'Aspirin', 'Nyeri otot, sakit kepala', 25);
+select * from obat;
+
+
+
+-- JAWABAN
+-- nomor 1
+SELECT * FROM  dokter;
+SELECT * FROM  obat;
+SELECT * FROM  pasien;
+SELECT * FROM  ruang;
+
+-- nomor 2
+SELECT * FROM pasien ORDER BY nama_pasien ASC;
+
+-- nomor 3
+SELECT COUNT(alamat) FROM pasien;
+
+-- nomor 4
