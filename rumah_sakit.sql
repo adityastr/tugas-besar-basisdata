@@ -1,4 +1,4 @@
--- Active: 1701242641759@@127.0.0.1@3306@rumah_sakit
+-- Active: 1701184413041@@127.0.0.1@3306@rumah_sakit
 create database rumah_sakit;
 show databases;
 use rumah_sakit;
@@ -15,6 +15,7 @@ spesialis varchar(50) not null,
 primary key (id_dokter));
 alter table dokter add column waktu_input timestamp default current_timestamp;
 alter table dokter add column jadwal varchar(5) not null after spesialis;
+ALTER TABLE dokter RENAME COLUMN jadwal to shift;
 desc dokter;
 insert into dokter (id_dokter, nama_dokter, no_telepon, alamat, spesialis, jadwal) values 
 ('D0001', 'Dafiq', '081267767903', 'Jatisari', 'Anak', 'Malam'),
@@ -75,6 +76,8 @@ jenis_obat varchar(50),
 primary key (id_obat));
 alter table obat add column stok_obat integer(4) unsigned not null default 0;
 alter table obat modify column stok_obat integer unsigned not null default 0;
+ALTER TABLE obat DROP COLUMN stok_obat;
+ALTER TABLE obat DROP COLUMN qty;
 desc obat;
 insert into obat (id_obat, nama_obat, jenis_obat, stok_obat) values
 ('O00001', 'Benzalkonium Chloride', 'spray rongga mulut, obat kumur', 20),
@@ -96,6 +99,10 @@ SELECT * FROM  ruang;
 SELECT * FROM pasien ORDER BY nama_pasien ASC;
 
 -- nomor 3
-SELECT COUNT(alamat) FROM pasien;
+SELECT alamat, COUNT(alamat) FROM pasien GROUP BY alamat;
 
 -- nomor 4
+SELECT nama_dokter, shift FROM dokter WHERE shift != 'malam';
+
+--nomor 5
+ALTER TABLE obat ADD COLUMN qty INTEGER(3) UNSIGNED DEFAULT 0;
